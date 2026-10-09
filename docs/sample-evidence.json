@@ -1,0 +1,80 @@
+{
+  "scope": "Synthetic single-process exercise; reviewer simulated",
+  "regression": {
+    "tests_run": 18,
+    "passed": true,
+    "test_source_hash": "6dffd0df2cdc669385aa2b952ec3846424bfbba079379a02abfe7adc9654a980"
+  },
+  "assurance_events": [
+    {
+      "state": "INVALIDATED",
+      "claim": "CTRL-PAYLOAD-01",
+      "condition_hash": "0c0ca8436712438238fef699569ed4235f4154a1c0ba63a54bad51ef886f4108",
+      "expected": "HUMAN_REVIEW",
+      "actual": "PERMIT",
+      "code_hash": "985a579fffdfbf4787e530b5c158eca65aa071eb1231a3637ca3f5e4e2014607"
+    },
+    {
+      "state": "CORRECTED_PENDING_RETEST",
+      "code_hash": "2681633f4bfea0ec793823dedade57e23647164517daf7cf2f1b93e3521965b1"
+    },
+    {
+      "state": "PENDING_REVIEW",
+      "evidence_hash": "6e4ecfd6bacb354369f6be11bf9aea521b15c5dfafc6fd718145f0c5a06528a3"
+    },
+    {
+      "state": "RESTORED_BOUNDED",
+      "reviewer": "designated-reviewer",
+      "simulated": true,
+      "code_hash": "2681633f4bfea0ec793823dedade57e23647164517daf7cf2f1b93e3521965b1",
+      "scope": "Altered recipient under recorded synthetic condition"
+    }
+  ],
+  "runtime_events": [
+    {
+      "type": "approval",
+      "id": "a379f669-0bdf-4593-bb26-a8e334345bba",
+      "payload": "baf38cf264ff603e711813e2016bc95984266ba0f3ebde699bc5d74a2f1a13a9",
+      "policy": "7611a8fe7c470c21127c140e81194d85ccf504018d491590cf375eddae4ee92a",
+      "approver": "human-reviewer",
+      "expires": 400
+    },
+    {
+      "type": "gate_decision",
+      "decision": "HUMAN_REVIEW",
+      "reason": "PAYLOAD_CHANGED",
+      "approval_id": "a379f669-0bdf-4593-bb26-a8e334345bba",
+      "payload_hash": "19c7806b93092b06ac63eae3a6d576f189936a6af9637d3d64d727b340d8bc7f",
+      "policy_hash": "7611a8fe7c470c21127c140e81194d85ccf504018d491590cf375eddae4ee92a",
+      "policy_version": "policy-1",
+      "code_version": "0.1.0",
+      "time": 101,
+      "data_class": "synthetic"
+    },
+    {
+      "type": "gate_decision",
+      "decision": "PERMIT",
+      "reason": "AUTHORIZED",
+      "approval_id": "a379f669-0bdf-4593-bb26-a8e334345bba",
+      "payload_hash": "baf38cf264ff603e711813e2016bc95984266ba0f3ebde699bc5d74a2f1a13a9",
+      "policy_hash": "7611a8fe7c470c21127c140e81194d85ccf504018d491590cf375eddae4ee92a",
+      "policy_version": "policy-1",
+      "code_version": "0.1.0",
+      "time": 102,
+      "data_class": "synthetic"
+    },
+    {
+      "type": "simulated_execution",
+      "decision": "PERMIT",
+      "reason": "AUTHORIZED",
+      "approval_id": "a379f669-0bdf-4593-bb26-a8e334345bba",
+      "payload_hash": "baf38cf264ff603e711813e2016bc95984266ba0f3ebde699bc5d74a2f1a13a9",
+      "policy_hash": "7611a8fe7c470c21127c140e81194d85ccf504018d491590cf375eddae4ee92a",
+      "policy_version": "policy-1",
+      "code_version": "0.1.0",
+      "time": 102,
+      "data_class": "synthetic",
+      "outcome": "SIMULATED_ONLY"
+    }
+  ]
+}

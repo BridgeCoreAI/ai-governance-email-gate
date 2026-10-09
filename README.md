@@ -2,37 +2,114 @@
 
 **Grace Adjeli | BridgeCore AI**
 
-Episode 6: **Engineering AI Governance** — a bounded Python demonstrator of payload-bound approval, execution-time revalidation, and a simulated assurance restoration lifecycle.
+A working, synthetic demonstrator of approval binding, execution-time authorization checks, and a bounded failure-to-restoration exercise. Built as the technical foundation for Episode 6, **Engineering AI Governance**.
 
-## Run
+## Problem statement
 
-Python 3.10+; standard library only. Run from the repository root:
+An AI assistant drafts an email for a human to review. The human approves one recipient, one message, one set of attachments, and one sending identity. Before execution, the assistant changes the recipient or attachment—or the conditions supporting approval change.
+
+If the sending service only checks that an approval exists, it can execute an action the reviewer never authorized. A documented policy and an approval checkbox do not establish that the final action remains within the approved boundary.
+
+The engineering problem is to bind approval to a specific action, revalidate its conditions immediately before execution, prevent changed or unauthorized actions from proceeding, and record evidence linking authorization to the observed outcome. If a control fails, a subsequent successful run alone does not establish that the affected assurance claim can be restored.
+
+## Project objectives
+
+1. Bind a trusted approval record to the exact email payload and policy configuration.
+2. Independently enforce current authority, expiration, recipient permissions, data rules, and one-time execution.
+3. Route changed payloads or conditions to fresh review without executing them.
+4. Correlate approval, decision, and simulated execution evidence.
+5. Demonstrate invalidation, correction, same-condition retest, regression, and simulated designated-reviewer restoration for a bounded control claim.
+
+## Scope
+
+Python 3.10+; standard library only. The assistant is represented by an email object. All addresses use `example.test`; no network transport, credentials, live model, or paid API is required.
+
+This is a single-process educational implementation. Human identity, time, attachment hashes, data classification, and restoration review are trusted synthetic inputs. It does not establish enterprise assurance or real email delivery. See [limitations](docs/design.md#material-limitations).
+
+## Quick start
+
+Clone the private repository using your authorized GitHub account, then run from its root:
 
 ```bash
+git clone https://github.com/BridgeCoreAI/ai-governance-email-gate.git
+cd ai-governance-email-gate
 python -m unittest discover -s tests -v
 python -m email_gate.demo
 ```
 
-No credentials, paid model API, or real email account are needed. All addresses use `example.test`. Nothing is transmitted.
+On Windows, use `py` if `python` is unavailable. No dependency installation is required. The demo prints JSON evidence; test results appear on stderr. UUIDs vary between runs.
 
-## What is implemented
+To capture a new evidence run:
 
-- The approval service records the exact sender, To/CC/BCC, subject, body and attachment filename/content hashes, approver, expiration, and policy fingerprint.
-- The separate gate checks the trusted approval record at execution. Missing/revoked/replayed approval blocks; payload/configuration changes and expiry require fresh human review. Recipient permissions and synthetic-data rules are independently enforced.
-- Only a permit records a simulated execution receipt. Approval, gate decision and receipt share identifiers and fingerprints.
-- The recovery exercise records a deliberately defective approval-presence-only fixture permitting an altered recipient. The affected claim is invalidated, the corrected gate's source hash is bound to the same-condition retest, regressions are run, and a simulated designated reviewer restores a bounded claim.
+```bash
+python -m email_gate.demo > evidence-run.json
+```
 
-See [requirements and limitations](docs/design.md) and [sample run evidence](docs/sample-evidence.json). The sample was generated locally; run it yourself to reproduce behavior. UUIDs vary.
+Do not mistake generated evidence for independently verified assurance.
 
-## Claim limits
+## Architecture
 
-18 unit tests passed locally. This establishes tested behavior in a synthetic single-process exercise, not enterprise assurance, message accuracy, delivery, authenticated human approval, or independent certification. The recovery fixture represents a known omitted check, not a historical production incident or deployed patch. Restoration is simulated and never authorizes the next email.
+```mermaid
+flowchart TD
+    A[Proposed email] --> B[Approval service]
+    B --> C[Trusted approval record]
+    A --> D[Execution gate]
+    C --> D
+    D --> E{Current checks pass?}
+    E -->|Permit| F[Simulated execution receipt]
+    E -->|Block or human review| G[No execution]
+    F --> H[Correlated evidence]
+    G --> H
+```
 
-The AI assistant is represented by a proposed email object; a live model is unnecessary to test this boundary.
+The approval service records sender, To/CC/BCC, subject, body, attachment filename/content hashes, approver, expiration, and the complete policy fingerprint. The gate looks up that record by ID; the proposed action cannot supply its own approval claims.
 
-## License
+Only PERMIT produces a simulated receipt. BLOCK and HUMAN_REVIEW both prevent execution. Human review requires an explicit new approval and another gate evaluation; it does not silently become permission.
 
-Apache License 2.0. See LICENSE. BridgeCore AI branding is not licensed by the software license.
+## Scenarios
+
+| Scenario | Expected behavior |
+|---|---|
+| Approved payload with current permissions | PERMIT; simulated receipt |
+| Missing or revoked approval | BLOCK; no receipt |
+| Recipient, message, attachment hash, or sender changed | HUMAN_REVIEW; no receipt |
+| Policy content changed, even without a version label change | HUMAN_REVIEW; no receipt |
+| Approval expired | HUMAN_REVIEW; no receipt |
+| Recipient outside current permissions or non-synthetic classification | BLOCK; no receipt |
+| Approval reused | BLOCK; no second receipt |
+| Fresh approval for revised permitted payload | PERMIT; simulated receipt |
+
+## Failure and recovery example
+
+The demo includes an isolated deliberately defective fixture that checks approval presence but omits payload binding. It permits an altered recipient. The exercise records that failure and invalidates the affected claim, binds the corrected gate to its source hash, retests the same condition, runs regressions, and requires a simulated designated reviewer before restoring the bounded claim.
+
+This represents a known omitted check, not a historical production incident or deployed patch. Restoring the control claim does not authorize the next email.
+
+## Repository guide
+
+| File | Purpose |
+|---|---|
+| `email_gate/core.py` | Payload, policy, trusted approval records, gate, simulated receipts |
+| `email_gate/recovery.py` | Bounded assurance-state transitions |
+| `email_gate/demo.py` | Executable synthetic failure, retest, review, and evidence example |
+| `tests/test_gate.py` | Authorization and negative-path tests |
+| `tests/test_recovery.py` | Restoration prerequisites and evidence-binding tests |
+| [Design](docs/design.md) | Architecture decisions, trust boundaries, limitations |
+| [Requirements](docs/requirements.md) | Control requirements and acceptance criteria |
+| [Evidence guide](docs/evidence-guide.md) | Reproduction, fields, interpretation, and claim limits |
+| [Sample evidence](docs/sample-evidence.json) | Recorded local demo output |
+| [Release checklist](docs/release-checklist.md) | Criteria before public publication |
+| [Contributing](CONTRIBUTING.md) | Development and review expectations |
+| [Security](SECURITY.md) | Reporting guidance and supported scope |
+| `.github/workflows/tests.yml` | Automated tests on pushes and pull requests |
+
+## Validation status
+
+18 unit tests passed locally on Python 3.12, including seven payload-change subcases. A GitHub Actions workflow is provided for Python 3.10 and 3.12; remote results must be checked separately. The recorded sample is local execution evidence, not independent certification.
+
+## License and attribution
+
+Apache License 2.0; see [LICENSE](LICENSE). The software license does not grant permission to use BridgeCore AI branding. Author: **Grace Adjeli**, BridgeCore AI.
 
 **Governance is not what is defined. It is what is enforced at execution.**
 

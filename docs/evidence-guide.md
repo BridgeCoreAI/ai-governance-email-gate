@@ -28,3 +28,12 @@ Run `python -m unittest discover -s tests -v` and `python -m email_gate.demo` fr
 The fixture deliberately omits payload binding; it is not a patched production deployment. The recovery model validates linkage of trusted test results, not the truthfulness of arbitrary submitted reports. No independent auditor or reviewer participated. Logs are mutable in-memory data exported as JSON.
 
 **Conclusion strength must not exceed evidence strength.**
+
+## Download fresh GitHub run evidence
+
+Open **Actions → Control tests → the completed run**. In the summary's **Artifacts** section, download the archive for Python 3.10 or 3.12. Each contains:
+
+- `evidence-run.json`: fresh synthetic demo output.
+- `evidence-manifest.json`: tested commit, workflow run and attempt, Python version, and SHA256 of the evidence file.
+
+Artifacts are retained for 30 days and access follows repository permissions. A pull-request run's tested commit can be GitHub's temporary merge commit; the manifest records the actual checkout SHA. Re-running jobs tests that run's existing commit, not automatically the newest branch commit. A rerun generates a new attempt-specific artifact. Hashes help detect changes; they do not certify results independently.

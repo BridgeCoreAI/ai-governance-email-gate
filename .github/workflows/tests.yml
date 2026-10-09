@@ -6,16 +6,47 @@ permissions:
   contents: read
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python-version: ['3.10', '3.12']
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Run control and recovery tests
         run: python -m unittest discover -s tests -v
       - name: Run synthetic evidence demonstration
         run: python -m email_gate.demo > evidence-run.json
+      - name: Record evidence manifest
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import platform
+          from pathlib import Path
+          evidence = Path("evidence-run.json")
+          manifest = {
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "tested_commit": os.environ["GITHUB_SHA"],
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "event": os.environ["GITHUB_EVENT_NAME"],
+              "python": platform.python_version(),
+              "evidence_sha256": hashlib.sha256(evidence.read_bytes()).hexdigest(),
+              "scope": "Synthetic demonstrator; not independent assurance"
+          }
+          Path("evidence-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+          PY
+      - name: Upload synthetic evidence
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: evidence-python-${{ matrix.python-version }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: |
+            evidence-run.json
+            evidence-manifest.json
+          if-no-files-found: error
+          retention-days: 30

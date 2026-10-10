@@ -107,7 +107,7 @@ This represents a known omitted check, not a historical production incident or d
 
 18 unit tests passed locally on Python 3.12, including seven payload-change subcases.
 
-GitHub Actions has also independently executed the repository workflow on `main` for Python 3.10 and Python 3.12. Both matrix jobs completed successfully, including:
+GitHub Actions has also executed the repository workflow on `main` for Python 3.10 and Python 3.12. Both matrix jobs completed successfully, including:
 
 - the full control and recovery test suite
 - the synthetic evidence demonstration

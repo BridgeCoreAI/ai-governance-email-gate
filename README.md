@@ -105,7 +105,18 @@ This represents a known omitted check, not a historical production incident or d
 
 ## Validation status
 
-18 unit tests passed locally on Python 3.12, including seven payload-change subcases. A GitHub Actions workflow is provided for Python 3.10 and 3.12; remote results must be checked separately. The recorded sample is local execution evidence, not independent certification.
+18 unit tests passed locally on Python 3.12, including seven payload-change subcases.
+
+GitHub Actions has also independently executed the repository workflow on `main` for Python 3.10 and Python 3.12. Both matrix jobs completed successfully, including:
+
+- the full control and recovery test suite
+- the synthetic evidence demonstration
+- generation of a run-specific evidence manifest
+- upload of downloadable evidence artifacts for each Python version
+
+The CI evidence manifest records the tested commit, workflow run and attempt, Python version, and SHA256 digest of the generated evidence file. These results strengthen reproducibility of the demonstrator, but they are still automated repository evidence—not independent certification, production assurance, or proof of real email delivery.
+
+See [Evidence guide](docs/evidence-guide.md) for how to retrieve and interpret fresh CI evidence.
 
 ## License and attribution
 

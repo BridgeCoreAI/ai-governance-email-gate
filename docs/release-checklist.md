@@ -1,6 +1,6 @@
 # Release checklist
 
-Repository stays private while building. Publication requires Grace Adjeli's explicit decision.
+Repository stayed private while building. Publication required Grace Adjeli's explicit decision, given on 2026-11-18.
 
 ## Technical and evidence verification
 
@@ -34,11 +34,11 @@ The verification above establishes reproducible repository behavior for the revi
 
 A successful control test or restored bounded claim is not permission for a future action; execution still requires a fresh execution-time gate decision.
 
-## Publication decision — intentionally pending
+## Publication decision
 
 - [ ] Re-run CI after the final documentation freeze and verify the exact final commit.
 - [ ] Revisit LinkedIn/Substack claims against the frozen repository and evidence.
-- [ ] Decide whether the repository remains private or becomes public.
+- [x] Decide whether the repository remains private or becomes public. Decision: public, by Grace Adjeli, 2026-11-18.
 - [ ] If public release is approved, perform final visibility review and tag the release.
 
 Episode 6 should describe only the implementation and evidence actually present in the reviewed version.

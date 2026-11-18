@@ -2,7 +2,7 @@
 
 ## DL-001 — Bounded implementation
 
-Use deterministic synthetic emails and a simulated transport. Keep the repository private during development. Publish only after release review. No enterprise assurance claim.
+Use deterministic synthetic emails and a simulated transport. The repository was kept private during development and published after release review. No enterprise assurance claim.
 
 ## DL-002 — Trusted approval records
 
@@ -53,4 +53,4 @@ The label RESTORED_BOUNDED applies only to the recorded synthetic control condit
 
 ## Release review
 
-Before making public: inspect synthetic fixtures and evidence for secrets/personal data, rerun tests on the final commit, verify documentation scope, review branding and license, and obtain Grace's public-release decision.
+Before making public: inspect synthetic fixtures and evidence for secrets/personal data, rerun tests on the final commit, verify documentation scope, review branding and license, and obtain Grace's public-release decision. Grace Adjeli approved public release on 2026-11-18.

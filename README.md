@@ -28,7 +28,7 @@ This is a single-process educational implementation. Human identity, time, attac
 
 ## Quick start
 
-Clone the private repository using your authorized GitHub account, then run from its root:
+Clone the repository, then run from its root:
 
 ```bash
 git clone https://github.com/BridgeCoreAI/ai-governance-email-gate.git
